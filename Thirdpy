@@ -1,0 +1,19 @@
+import pandas as pd
+import ta  # Technical Analysis library
+
+def calculate_technical_indicators(data):
+    df = pd.DataFrame(data)
+    
+    # Moving Average (SMA)
+    df['SMA_50'] = df['close'].rolling(window=50).mean()
+    df['SMA_200'] = df['close'].rolling(window=200).mean()
+    
+    # RSI (Relative Strength Index)
+    df['RSI'] = ta.momentum.RSIIndicator(df['close'], window=14).rsi()
+    
+    # MACD (Moving Average Convergence Divergence)
+    macd = ta.trend.MACD(df['close'])
+    df['MACD'] = macd.macd()
+    df['MACD_signal'] = macd.macd_signal()
+    
+    return df
