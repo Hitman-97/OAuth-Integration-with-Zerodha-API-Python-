@@ -1,0 +1,30 @@
+import requests
+from flask import Flask, redirect, request, session
+from requests.auth import HTTPBasicAuth
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
+ZERODHA_API_KEY = 'your_zerodha_api_key'
+ZERODHA_API_SECRET = 'your_zerodha_api_secret'
+REDIRECT_URI = 'your_redirect_uri'
+
+# Step 1: Redirect to Zerodha's login page
+@app.route('/login')
+def login():
+    return redirect(f'https://kite.zerodha.com/connect/login?api_key={ZERODHA_API_KEY}&v=3')
+
+# Step 2: Callback after authentication
+@app.route('/callback')
+def callback():
+    code = request.args.get('request_token')
+    response = requests.post(
+        'https://api.kite.trade/session/token',
+        data={'api_key': ZERODHA_API_KEY, 'request_token': code, 'secret': ZERODHA_API_SECRET}
+    )
+    data = response.json()
+    session['access_token'] = data['access_token']
+    return 'Login successful, you can now trade'
+
+if __name__ == '__main__':
+    app.run(debug=True)
