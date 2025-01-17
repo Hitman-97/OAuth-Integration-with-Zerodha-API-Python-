@@ -1,0 +1,18 @@
+def backtest_strategy(data):
+    df = calculate_technical_indicators(data)
+    
+    initial_balance = 100000  # Assume starting with $100,000
+    balance = initial_balance
+    position = 0
+    for i in range(200, len(df)):
+        if df['SMA_50'][i] > df['SMA_200'][i] and position == 0:
+            position = balance / df['close'][i]  # Buy
+            balance = 0
+        elif df['SMA_50'][i] < df['SMA_200'][i] and position > 0:
+            balance = position * df['close'][i]  # Sell
+            position = 0
+    
+    if position > 0:
+        balance = position * df['close'].iloc[-1]  # Close remaining position
+    
+    return balance - initial_balance  # Profit or loss
