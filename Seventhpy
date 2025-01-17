@@ -1,0 +1,16 @@
+def place_order(symbol, qty, order_type, access_token):
+    url = "https://api.kite.trade/orders/regular"
+    headers = {
+        'Authorization': f"Bearer {access_token}"
+    }
+    payload = {
+        'tradingsymbol': symbol,
+        'quantity': qty,
+        'exchange': 'NSE',
+        'transaction_type': 'BUY' if order_type == 'buy' else 'SELL',
+        'order_type': 'LIMIT',
+        'product': 'MIS',
+        'price': '1500'  # For example, price is hardcoded here
+    }
+    response = requests.post(url, headers=headers, json=payload)
+    return response.json()
