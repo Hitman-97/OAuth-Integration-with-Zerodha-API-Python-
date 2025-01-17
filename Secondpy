@@ -1,0 +1,15 @@
+import requests
+
+def get_historical_data(symbol, interval, from_date, to_date, access_token):
+    url = f"https://api.kite.trade/instruments/historical/{symbol}/{interval}"
+    headers = {
+        'Authorization': f"Bearer {access_token}"
+    }
+    params = {
+        'from': from_date,
+        'to': to_date,
+        'continuous': True
+    }
+    
+    response = requests.get(url, headers=headers, params=params)
+    return response.json()
